@@ -3,53 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>e-Name Card QR Generator</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <title>E-Name Card</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        .container { max-width: 400px; margin: auto; }
-        input, button { width: 100%; padding: 10px; margin: 5px 0; }
-        #qrcode { margin-top: 20px; }
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        .card {
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            width: 300px;
+            background-color: #f9f9f9;
+        }
+        .qr-code {
+            margin-top: 20px;
+        }
+        .contact-info {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>e-Name Card QR Generator</h2>
-        <input type="text" id="name" placeholder="Full Name" required>
-        <input type="text" id="title" placeholder="Job Title" required>
-        <input type="text" id="company" placeholder="Company" required>
-        <input type="tel" id="phone" placeholder="Phone Number" required>
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="url" id="website" placeholder="Website (Optional)">
-        <button onclick="generateQR()">Generate QR Code</button>
-        <div id="qrcode"></div>
+
+    <h1>E-Name Card</h1>
+
+    <div class="card">
+        <h3>John Doe</h3>
+        <p>Software Engineer</p>
+        <p>Email: johndoe@example.com</p>
+        <p>Phone: +1234567890</p>
+
+        <!-- QR Code will appear here -->
+        <div id="qr-code" class="qr-code"></div>
+
+        <!-- Contact Info as vCard link -->
+        <div class="contact-info">
+            <a href="data:text/vcard;base64,BEGIN:VCARD%0AVERSION:3.0%0AFN:John%20Doe%0ATEL:+1234567890%0AEMAIL:johndoe@example.com%0AEND:VCARD" download="John_Doe.vcf">
+                Download Contact Info (vCard)
+            </a>
+        </div>
     </div>
 
     <script>
-        function generateQR() {
-            let name = document.getElementById('name').value;
-            let title = document.getElementById('title').value;
-            let company = document.getElementById('company').value;
-            let phone = document.getElementById('phone').value;
-            let email = document.getElementById('email').value;
-            let website = document.getElementById('website').value;
-            
-            if (!name || !title || !company || !phone || !email) {
-                alert('Please fill in all required fields!');
-                return;
-            }
-            
-            let vCardData = `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nORG:${company}\nTITLE:${title}\nTEL:${phone}\nEMAIL:${email}\nURL:${website}\nEND:VCARD`;
-            let blob = new Blob([vCardData], { type: 'text/vcard' });
-            let vcfUrl = URL.createObjectURL(blob);
-            
-            document.getElementById('qrcode').innerHTML = "";
-            new QRCode(document.getElementById("qrcode"), {
-                text: vcfUrl,
-                width: 200,
-                height: 200
-            });
-        }
+        // Generate QR code for contact information (vCard format)
+        const vCardData = `BEGIN:VCARD
+VERSION:3.0
+FN:John Doe
+TEL:+1234567890
+EMAIL:johndoe@example.com
+END:VCARD`;
+
+        QRCode.toCanvas(document.getElementById('qr-code'), vCardData, function (error) {
+            if (error) console.error(error);
+            console.log('QR Code generated successfully!');
+        });
     </script>
+
 </body>
 </html>
