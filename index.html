@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Name Card</title>
+    <title>QR Code Generator - E-Name Card</title>
     <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
     <style>
         body {
@@ -14,7 +14,7 @@
         h1 {
             color: #4CAF50;
         }
-        .card {
+        .form-container {
             margin: 20px auto;
             padding: 20px;
             border: 1px solid #ccc;
@@ -22,48 +22,71 @@
             width: 300px;
             background-color: #f9f9f9;
         }
-        .qr-code {
-            margin-top: 20px;
+        input, button {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ddd;
         }
-        .contact-info {
+        .qr-code {
             margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
-    <h1>E-Name Card</h1>
+    <h1>SFSG E-Name Card QR Code Generator</h1>
 
-    <div class="card">
-        <h3>John Doe</h3>
-        <p>Software Engineer</p>
-        <p>Email: johndoe@example.com</p>
-        <p>Phone: +1234567890</p>
+    <div class="form-container">
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" placeholder="Enter your full name">
 
-        <!-- QR Code will appear here -->
-        <div id="qr-code" class="qr-code"></div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" placeholder="Enter your email address">
 
-        <!-- Contact Info as vCard link -->
-        <div class="contact-info">
-            <a href="data:text/vcard;base64,BEGIN:VCARD%0AVERSION:3.0%0AFN:John%20Doe%0ATEL:+1234567890%0AEMAIL:johndoe@example.com%0AEND:VCARD" download="John_Doe.vcf">
-                Download Contact Info (vCard)
-            </a>
-        </div>
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" placeholder="Enter your phone number">
+
+        <button onclick="generateQRCode()">Generate QR Code</button>
     </div>
 
+    <div id="qr-code" class="qr-code"></div>
+
     <script>
-        // Generate QR code for contact information (vCard format)
-        const vCardData = `BEGIN:VCARD
+        // Function to generate the QR Code based on the user input
+        function generateQRCode() {
+            // Get user inputs
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+
+            // Validate the inputs
+            if (!name || !email || !phone) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            // Create the vCard data string
+            const vCardData = `BEGIN:VCARD
 VERSION:3.0
-FN:John Doe
-TEL:+1234567890
-EMAIL:johndoe@example.com
+FN:${name}
+TEL:${phone}
+EMAIL:${email}
 END:VCARD`;
 
-        QRCode.toCanvas(document.getElementById('qr-code'), vCardData, function (error) {
-            if (error) console.error(error);
-            console.log('QR Code generated successfully!');
-        });
+            // Clear previous QR code
+            document.getElementById('qr-code').innerHTML = '';
+
+            // Generate the new QR code
+            QRCode.toCanvas(document.getElementById('qr-code'), vCardData, function (error) {
+                if (error) {
+                    console.error(error);
+                } else {
+                    console.log('QR Code generated successfully!');
+                }
+            });
+        }
     </script>
 
 </body>
